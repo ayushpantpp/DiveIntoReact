@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SeasonDisplay from './SeasonDisplay';
-
+import Loader from './Loader';
 class App extends React.Component {
 
   state = { lat: null, lang: null, errorMessgae: null };
@@ -18,19 +18,23 @@ class App extends React.Component {
        }
     );
     console.log(this.state);
-
   }
-  render() {
+  renderContent() {
     if(this.state.errorMessgae)
-    return (<div> Error: {this.state.errorMessgae} 
-    </div>
-      
-      )
+    return (<Loader/>
+    )
     if(!this.state.errorMessgae)
     return <SeasonDisplay data = { this.state }/>
 
+    return (<Loader message="Please allow to find location"/>)
+  }
 
-    return (<div>Null</div>)
+  render() {
+    return (
+      <div className="border red">
+        {this.renderContent()}
+      </div>
+    );
    }
 }
 

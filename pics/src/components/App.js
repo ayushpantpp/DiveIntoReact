@@ -5,12 +5,22 @@ import ImageList from './ImageList';
 
 
 class App extends React.Component {
-  state = { images: [] };
-
+  state = { images: [], queryTerm: '', count:2};
   onSearchSubmit = async (term) => {
     const response = await unsplash.get('/search/photos', {
         params: {
           query: term
+        }
+    })
+    this.setState({ images: response.data.results, queryTerm : term});
+  }
+  getNextPage = async (term, pageno) => {
+    this.setState({ count: this.state.count + 1 });
+
+    const response = await unsplash.get('/search/photos', {
+        params: {
+          query: this.state.queryTerm,
+          page: this.state.count
         }
     })
     this.setState({ images: response.data.results });
@@ -22,6 +32,7 @@ class App extends React.Component {
       <SearchBar onSubmit={ this.onSearchSubmit }/>
       <ImageList images= { this.state.images }/>
       Found: { this.state.images.length } images
+      <button onClick={ this.getNextPage } term={this.state.queryTerm}>Get Next</button>
     </div>
     );  
   }
